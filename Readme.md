@@ -19,11 +19,34 @@ make up
 ```
 and run
 ```
-POST /bfadd-setup HTTP/1.1
+POST /bf-test-setup HTTP/1.1
 Host: localhost:8080
 ```
-on cURL or Postman to test the test route `/bfadd-setup`.
+on cURL or Postman to test the test route `/bf-test-setup`.
 The first time this runs, you should create a key of name `testBF` and insert key named `works` with status 201. The second time you run this, it should return 409 status
 
+## Reserve a new BloomFilter
 
+See https://redis.io/commands/bf.reserve/ for details on the params.
 
+```
+POST /bf-reserve HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+Content-Length: 65
+
+{
+    "name": "BF", 
+    "errorRate": 0.01,
+    "capacity": 1000
+}
+```
+
+### Status codes
+#### 201
+If a bloomfilter with name is created
+#### 409
+If one with same name already exists
+
+#### 500
+If other errors

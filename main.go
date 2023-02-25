@@ -1,13 +1,16 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	redisbloom "github.com/RedisBloom/redisbloom-go"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/tomkaith13/redis-u-service/bf"
 )
 
 func main() {
@@ -23,7 +26,7 @@ func main() {
 		w.Write([]byte("it works!!"))
 	})
 
-	r.Post("/bfadd-setup", func(w http.ResponseWriter, r *http.Request) {
+	r.Post("/bf-test-setup", func(w http.ResponseWriter, r *http.Request) {
 		var client = redisbloom.NewClient("redis-server:6379", "nohelp", nil)
 		res, err := client.Add("testBF", "works")
 
@@ -41,6 +44,40 @@ func main() {
 
 		w.WriteHeader(http.StatusConflict)
 		w.Write([]byte("item maybe exist!!"))
+
+	})
+
+	r.Post("/bf-reserve", func(w http.ResponseWriter, r *http.Request) {
+		var client = redisbloom.NewClient("redis-server:6379", "nohelp", nil)
+		var bfRequest bf.ReserveRequest
+
+		err := json.NewDecoder(r.Body).Decode(&bfRequest)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		fmt.Printf("req: %+v", bfRequest)
+
+		err = client.Reserve(bfRequest.Name, bfRequest.ErrorRate, bfRequest.Capacity)
+		if err != nil {
+			if strings.Contains(err.Error(), "item exists") {
+				w.WriteHeader(http.StatusConflict)
+				w.Write([]byte("err: " + err.Error()))
+				return
+			}
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("err: " + err.Error()))
+			return
+		}
+		w.WriteHeader(http.StatusCreated)
+
+		b, err := json.Marshal(bfRequest)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		w.Write(b)
 
 	})
 
