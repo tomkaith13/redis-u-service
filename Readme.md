@@ -1,3 +1,7 @@
+# Redis BloomFilter Service
+
+basics on BloomFilters https://redis.io/docs/stack/bloom/
+This is minimalistic u-service that spins up a redis DB and uses it for membership operations in  the bloom filter.
 # Local dev setup
 just run:
 
