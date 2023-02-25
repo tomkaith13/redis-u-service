@@ -5,3 +5,8 @@ type ReserveRequest struct {
 	ErrorRate float64 `json:"errorRate"`
 	Capacity  uint64  `json:"capacity"`
 }
+
+type AddItemRequest struct {
+	KeyName string `json:"keyName"`
+	Item    string `json:"item"`
+}

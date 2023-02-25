@@ -81,6 +81,43 @@ func main() {
 
 	})
 
+	r.Post("/bf-insert", func(w http.ResponseWriter, r *http.Request) {
+		var client = redisbloom.NewClient("redis-server:6379", "nohelp", nil)
+		var bfRequest bf.AddItemRequest
+
+		err := json.NewDecoder(r.Body).Decode(&bfRequest)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		fmt.Printf("req: %+v\n", bfRequest)
+
+		res, err := client.BfInsert(bfRequest.KeyName, 0, 0, 0, true, false, []string{bfRequest.Item})
+		if err != nil {
+			if strings.Contains(err.Error(), "not found") {
+				w.WriteHeader(http.StatusBadRequest)
+				w.Write([]byte("err: No BF with keyName exists. Use POST /bf-reserve to create a new one"))
+				return
+			}
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("err: " + err.Error()))
+			return
+		}
+
+		for _, r := range res {
+			fmt.Println("res: ", r)
+			if r == 0 {
+				w.WriteHeader(http.StatusConflict)
+				w.Write([]byte("item may already exist"))
+				return
+			}
+		}
+		w.WriteHeader(http.StatusCreated)
+		w.Write([]byte("added"))
+
+	})
+
 	log.Fatal(http.ListenAndServe(":8080", r))
 
 }

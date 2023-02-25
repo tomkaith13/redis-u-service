@@ -7,3 +7,5 @@ clean:
 	docker compose down
 up:
 	make docker-build && docker compose up
+restart:
+	make clean && make up
