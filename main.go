@@ -96,7 +96,7 @@ func main() {
 		res, err := client.BfInsert(bfRequest.KeyName, 0, 0, 0, true, false, []string{bfRequest.Item})
 		if err != nil {
 			if strings.Contains(err.Error(), "not found") {
-				w.WriteHeader(http.StatusBadRequest)
+				w.WriteHeader(http.StatusNotFound)
 				w.Write([]byte("err: No BF with keyName exists. Use POST /bf-reserve to create a new one"))
 				return
 			}

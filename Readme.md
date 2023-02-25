@@ -13,6 +13,8 @@ on cURL or Postman to test the test route `/bfadd-test` and it should return a `
 
 # Dockerized local dev with redis as a separate service
 
+## Testing setup
+
 Run
 ```
 make up
@@ -50,3 +52,33 @@ If one with same name already exists
 
 #### 500
 If other errors
+
+
+## Insert a item to an existing BloomFilter
+
+See this for details https://redis.io/commands/bf.insert/
+
+```
+POST /bf-insert HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+Content-Length: 40
+
+{
+    "keyName": "BF",
+    "item": "b"
+}
+```
+### Status Codes
+#### 201
+Added a new item
+
+#### 409 
+Item may already exist in BloomFilter
+
+#### 404
+BloomFilter with keyName does not exist.
+User needs to use POST /bf-reserve to create a new one
+
+## Cleanup
+Run `make clean` to tear down the services and remove all containers.
