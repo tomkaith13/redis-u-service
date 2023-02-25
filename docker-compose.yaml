@@ -1,0 +1,21 @@
+version: "1"
+
+services:
+  redis-db:
+    image: redis:alpine
+    ports:
+      - 6379:6379
+    container_name: redis-server
+
+  redis-go-service:
+    image: github.com/tomkaith13/redis-u-service:latest
+
+    environment:
+      - REDIS_DB_URL=redis-db:6379
+      - REDIS_DB_PASSWORD=
+      - REDIS_DB=0
+    ports:
+      - 8080:8080
+    depends_on:
+      - redis-server
+    container_name: redis-go-service
