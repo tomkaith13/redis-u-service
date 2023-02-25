@@ -16,8 +16,10 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
-	r.Post("/bfadd", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("testing bfadd!!")
+	r.Post("/bfadd-test", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("testing bfadd-test route!!")
+		w.WriteHeader(http.StatusCreated)
+		w.Write([]byte("it works!!"))
 	})
 
 	log.Fatal(http.ListenAndServe(":8080", r))

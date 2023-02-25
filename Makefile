@@ -1,5 +1,5 @@
 run:
-	go run ./src/main.go
+	go run ./main.go
 docker-build:
 	docker build -t github.com/tomkaith13/redis-u-service .
 
