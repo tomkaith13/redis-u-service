@@ -8,3 +8,5 @@ docker-run:
 
 docker-image-clean:
 	docker stop github.com/tomkaith13/redis-u-service && docker rm -f github.com/tomkaith13/redis-u-service
+compose-up
+	docker compose up
