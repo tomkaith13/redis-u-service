@@ -2,7 +2,7 @@ version: "1"
 
 services:
   redis-server:
-    image: redis:alpine
+    image: redislabs/rebloom:latest
     ports:
       - 6379:6379
     container_name: redis-server

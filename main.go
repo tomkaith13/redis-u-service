@@ -29,11 +29,11 @@ func main() {
 
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			w.Write([]byte("error returned by redisbloom pkg.." + err.Error()))
 			return
 		}
 
-		if !res {
+		if res {
 			w.WriteHeader(http.StatusCreated)
 			w.Write([]byte("item doesnt exist .... new item added!!"))
 			return
