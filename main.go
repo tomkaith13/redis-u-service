@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	redisbloom "github.com/RedisBloom/redisbloom-go"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
@@ -20,6 +21,27 @@ func main() {
 		fmt.Println("testing bfadd-test route!!")
 		w.WriteHeader(http.StatusCreated)
 		w.Write([]byte("it works!!"))
+	})
+
+	r.Post("/bfadd-setup", func(w http.ResponseWriter, r *http.Request) {
+		var client = redisbloom.NewClient("redis-server:6379", "nohelp", nil)
+		res, err := client.Add("testBF", "works")
+
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		if !res {
+			w.WriteHeader(http.StatusCreated)
+			w.Write([]byte("item doesnt exist .... new item added!!"))
+			return
+		}
+
+		w.WriteHeader(http.StatusConflict)
+		w.Write([]byte("item maybe exist!!"))
+
 	})
 
 	log.Fatal(http.ListenAndServe(":8080", r))

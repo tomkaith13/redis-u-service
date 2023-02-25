@@ -7,6 +7,6 @@ docker-run:
 	docker run -p 8080:8080 github.com/tomkaith13/redis-u-service
 
 docker-image-clean:
-	docker stop github.com/tomkaith13/redis-u-service && docker rm -f github.com/tomkaith13/redis-u-service
-compose-up
-	docker compose up
+	docker stop github.com/tomkaith13/redis-u-service && docker rm -f github.com/tomkaith13/redis-u-service && docker stop redis-server && docker rm -f redis-server
+compose-up:
+	make docker-build && docker compose up
