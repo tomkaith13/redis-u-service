@@ -25,7 +25,7 @@ func main() {
 
 	r.Post("/bf-insert", bf.BfInsert)
 
-	r.Delete("/bf-delete", bf.BfDelete)
+	r.Delete("/bf", bf.BfDelete)
 
 	log.Fatal(http.ListenAndServe(":8080", r))
 

@@ -86,3 +86,19 @@ User needs to use POST /bf-reserve to create a new one
 
 ## Cleanup
 Run `make clean` to tear down the services and remove all containers.
+
+## Delete a BloomFilter key
+See https://redis.io/commands/del/
+
+This route can be used to delete a bloomfilter from the redis server.
+You can use this:
+```
+DELETE /bf HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+Content-Length: 23
+
+{
+    "keyName": "BF"
+}
+```
