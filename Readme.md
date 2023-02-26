@@ -102,3 +102,10 @@ Content-Length: 23
     "keyName": "BF"
 }
 ```
+
+### Status Codes
+#### 200
+Deletion worked
+
+#### 404
+Key not found
