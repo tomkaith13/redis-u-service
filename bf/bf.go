@@ -128,7 +128,7 @@ func BfInsert(w http.ResponseWriter, r *http.Request) {
 func BfDelete(w http.ResponseWriter, r *http.Request) {
 	client := redis.NewClient(&redis.Options{
 		Addr:     os.Getenv("REDIS_DB_URL"),
-		Password: "",
+		Password: os.Getenv("REDIS_DB_PASSWORD"),
 		DB:       0,
 	})
 	var ctx = context.Background()
