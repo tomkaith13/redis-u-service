@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 
 	redisbloom "github.com/RedisBloom/redisbloom-go"
@@ -33,7 +34,7 @@ func BfAddTestFunc(w http.ResponseWriter, r *http.Request) {
 }
 
 func BfTestSetup(w http.ResponseWriter, r *http.Request) {
-	var client = redisbloom.NewClient("redis-server:6379", "nohelp", nil)
+	var client = redisbloom.NewClient(os.Getenv("REDIS_DB_URL"), "nohelp", nil)
 	res, err := client.Add("testBF", "works")
 
 	if err != nil {
@@ -54,7 +55,7 @@ func BfTestSetup(w http.ResponseWriter, r *http.Request) {
 }
 
 func BfReserve(w http.ResponseWriter, r *http.Request) {
-	var client = redisbloom.NewClient("redis-server:6379", "nohelp", nil)
+	var client = redisbloom.NewClient(os.Getenv("REDIS_DB_URL"), "nohelp", nil)
 	var bfRequest ReserveRequest
 
 	err := json.NewDecoder(r.Body).Decode(&bfRequest)
@@ -88,7 +89,7 @@ func BfReserve(w http.ResponseWriter, r *http.Request) {
 }
 
 func BfInsert(w http.ResponseWriter, r *http.Request) {
-	var client = redisbloom.NewClient("redis-server:6379", "nohelp", nil)
+	var client = redisbloom.NewClient(os.Getenv("REDIS_DB_URL"), "nohelp", nil)
 	var bfRequest AddItemRequest
 
 	err := json.NewDecoder(r.Body).Decode(&bfRequest)
@@ -126,7 +127,7 @@ func BfInsert(w http.ResponseWriter, r *http.Request) {
 
 func BfDelete(w http.ResponseWriter, r *http.Request) {
 	client := redis.NewClient(&redis.Options{
-		Addr:     "redis-server:6379",
+		Addr:     os.Getenv("REDIS_DB_URL"),
 		Password: "",
 		DB:       0,
 	})

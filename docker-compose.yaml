@@ -11,7 +11,7 @@ services:
     image: github.com/tomkaith13/redis-u-service:latest
 
     environment:
-      - REDIS_DB_URL=redis-db:6379
+      - REDIS_DB_URL=redis-server:6379
       - REDIS_DB_PASSWORD=
       - REDIS_DB=0
     ports:
