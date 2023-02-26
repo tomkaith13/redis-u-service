@@ -84,9 +84,6 @@ Item may already exist in BloomFilter
 BloomFilter with keyName does not exist.
 User needs to use POST /bf-reserve to create a new one
 
-## Cleanup
-Run `make clean` to tear down the services and remove all containers.
-
 ## Delete a BloomFilter key
 See https://redis.io/commands/del/
 
@@ -109,3 +106,6 @@ Deletion worked
 
 #### 404
 Key not found
+
+## Cleanup
+Run `make clean` to tear down the services and remove all containers.
