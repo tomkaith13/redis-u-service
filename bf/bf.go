@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	redisbloom "github.com/RedisBloom/redisbloom-go"
 	redis "github.com/go-redis/redis/v8"
@@ -16,6 +17,7 @@ type ReserveRequest struct {
 	Name      string  `json:"name"`
 	ErrorRate float64 `json:"errorRate"`
 	Capacity  uint64  `json:"capacity"`
+	TtlInSecs uint64  `json:"ttl_in_secs"`
 }
 
 type AddItemRequest struct {
@@ -76,6 +78,22 @@ func BfReserve(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("err: " + err.Error()))
 		return
+	}
+
+	if bfRequest.TtlInSecs != 0 {
+		RedisClient := redis.NewClient(&redis.Options{
+			Addr:     os.Getenv("REDIS_DB_URL"),
+			Password: os.Getenv("REDIS_DB_PASSWORD"),
+			DB:       0,
+		})
+		ctx := context.Background()
+
+		val, err := RedisClient.Expire(ctx, bfRequest.Name, time.Duration(bfRequest.TtlInSecs*uint64(time.Second))).Result()
+		if err != nil || !val {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
 	}
 	w.WriteHeader(http.StatusCreated)
 
