@@ -44,9 +44,11 @@ Content-Length: 65
 {
     "name": "BF", 
     "errorRate": 0.01,
-    "capacity": 1000
+    "capacity": 1000,
+    "ttl_in_secs": 0
 }
 ```
+By default, the ttl can be `0` if not provided in body and the filter is not ephemeral.
 
 ### Status codes
 #### 201

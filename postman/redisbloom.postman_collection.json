@@ -49,7 +49,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"BF\",\n    \"errorRate\": 0.001,\n    \"capacity\": 2000\n}",
+					"raw": "{\n    \"name\": \"BF\",\n    \"errorRate\": 0.001,\n    \"capacity\": 10000000,\n    \"ttl_in_secs\": 3600\n}",
 					"options": {
 						"raw": {
 							"language": "json"
