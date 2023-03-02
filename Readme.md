@@ -86,6 +86,28 @@ Item may already exist in BloomFilter
 BloomFilter with keyName does not exist.
 User needs to use POST /bf-reserve to create a new one
 
+## Check membership
+See https://redis.io/commands/bf.exists/ for details
+The HTTP request looks like :
+```
+GET /bf-exists HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+Content-Length: 40
+
+{
+    "keyName": "BF",
+    "item": "a"
+}
+```
+
+### Status Codes
+#### 200
+Returns `definitely does not exist` or `maybe exists` based on the entries
+
+#### 500
+Returned if there is an error.
+
 ## Delete a BloomFilter key
 See https://redis.io/commands/del/
 
