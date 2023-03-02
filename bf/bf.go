@@ -25,6 +25,11 @@ type AddItemRequest struct {
 	Item    string `json:"item"`
 }
 
+type ExistsRequest struct {
+	KeyName string `json:"keyName"`
+	Item    string `json:"item"`
+}
+
 type DeleteKeyRequest struct {
 	KeyName string `json:"keyName"`
 }
@@ -141,6 +146,34 @@ func BfInsert(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("added"))
 
+}
+
+func BfExists(w http.ResponseWriter, r *http.Request) {
+	var client = redisbloom.NewClient(os.Getenv("REDIS_DB_URL"), "nohelp", nil)
+	var bfRequest ExistsRequest
+
+	err := json.NewDecoder(r.Body).Decode(&bfRequest)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	fmt.Printf("req: %+v\n", bfRequest)
+	res, err := client.Exists(bfRequest.KeyName, bfRequest.Item)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	if res {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("maybe exists"))
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("definitely does not exist"))
 }
 
 func BfDelete(w http.ResponseWriter, r *http.Request) {

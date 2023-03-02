@@ -27,6 +27,8 @@ func main() {
 
 	r.Delete("/bf", bf.BfDelete)
 
+	r.Get("/bf-exists", bf.BfExists)
+
 	log.Fatal(http.ListenAndServe(":8080", r))
 
 }
