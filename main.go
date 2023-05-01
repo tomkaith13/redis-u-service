@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/tomkaith13/redis-u-service/bf"
+	"github.com/tomkaith13/redis-u-service/cf"
 )
 
 func main() {
@@ -28,6 +29,8 @@ func main() {
 	r.Delete("/bf", bf.BfDelete)
 
 	r.Get("/bf-exists", bf.BfExists)
+
+	r.Post("/cf-reserve", cf.CfReserve)
 
 	log.Fatal(http.ListenAndServe(":8080", r))
 
