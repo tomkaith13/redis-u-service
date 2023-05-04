@@ -191,6 +191,156 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "localhost:8080/cf-reserve",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"CF\",\n    \"errorRate\": 0.001,\n    \"capacity\": 10000000,\n    \"ttl_in_secs\": 3600\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/cf-reserve",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"cf-reserve"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/cf-insert",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"keyName\": \"CF\",\n    \"item\": \"{{$guid}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/cf-insert",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"cf-insert"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/cf-exists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"keyName\": \"CF\",\n    \"item\": \"a\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/cf-exists",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"cf-exists"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/cf-delete-item",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"keyName\": \"CF\",\n    \"item\": \"a\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/cf-delete-item",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"cf-delete-item"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
