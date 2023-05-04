@@ -1,7 +1,8 @@
-# Redis BloomFilter Service
+# Redis BloomFilter + CuckooFilter Service
 
 basics on BloomFilters https://redis.io/docs/stack/bloom/
 This is minimalistic u-service that spins up a redis DB and uses it for membership operations in  the bloom filter.
+One additional op that cuckoo filter has that bloom filter does not is deleting an item from a key.
 # Local dev setup
 just run:
 
@@ -130,6 +131,28 @@ Deletion worked
 
 #### 404
 Key not found
+
+## Cuckoo-filter delete an item
+
+We can use `DEL /cf` endpoint to delete an item from a key
+```
+DELETE /cf HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+Content-Length: 23
+
+{
+    "keyName": "CF"
+}
+```
+
+### Status Codes
+#### 200
+If the delete was successful
+
+#### 404
+ if the item does not exist
+
 
 ## Cleanup
 Run `make clean` to tear down the services and remove all containers.
