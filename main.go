@@ -31,6 +31,7 @@ func main() {
 	r.Get("/bf-exists", bf.BfExists)
 
 	r.Post("/cf-reserve", cf.CfReserve)
+	r.Post("/cf-insert", cf.CfInsert)
 
 	log.Fatal(http.ListenAndServe(":8080", r))
 
