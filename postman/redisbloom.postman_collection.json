@@ -341,6 +341,46 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "localhost:8080/cf",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"keyName\": \"CF\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/cf",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"cf"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
