@@ -29,7 +29,7 @@ func main() {
 	r.Post("/cf-insert", cf.CfInsert)
 	r.Get("/cf-exists", cf.CfExists)
 	r.Delete("/cf-delete-item", cf.CfDeleteItem)
-	r.Delete("/cf-delete", cf.CfDelete)
+	r.Delete("/cf", cf.CfDelete)
 
 	log.Fatal(http.ListenAndServe(":8080", r))
 
