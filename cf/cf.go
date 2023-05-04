@@ -34,6 +34,9 @@ type DelItemRequest struct {
 	KeyName string `json:"keyName"`
 	Item    string `json:"item"`
 }
+type DeleteKeyRequest struct {
+	KeyName string `json:"keyName"`
+}
 
 func CfReserve(w http.ResponseWriter, r *http.Request) {
 	var client = redisbloom.NewClient(os.Getenv("REDIS_DB_URL"), "nohelp", nil)
@@ -171,4 +174,34 @@ func CfDeleteItem(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Deleted item"))
+}
+
+func CfDelete(w http.ResponseWriter, r *http.Request) {
+	client := redis.NewClient(&redis.Options{
+		Addr:     os.Getenv("REDIS_DB_URL"),
+		Password: os.Getenv("REDIS_DB_PASSWORD"),
+		DB:       0,
+	})
+	var ctx = context.Background()
+	var cfRequest DeleteKeyRequest
+
+	err := json.NewDecoder(r.Body).Decode(&cfRequest)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	val, err := client.Del(ctx, cfRequest.KeyName).Result()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	if val == 0 {
+		// this means we dont have anything to delete, hence 404
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("bloomfilter not found!"))
+		return
+	}
+
 }
