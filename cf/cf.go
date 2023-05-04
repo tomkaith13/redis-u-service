@@ -25,6 +25,16 @@ type AddItemRequest struct {
 	Item    string `json:"item"`
 }
 
+type ExistsRequest struct {
+	KeyName string `json:"keyName"`
+	Item    string `json:"item"`
+}
+
+type DelItemRequest struct {
+	KeyName string `json:"keyName"`
+	Item    string `json:"item"`
+}
+
 func CfReserve(w http.ResponseWriter, r *http.Request) {
 	var client = redisbloom.NewClient(os.Getenv("REDIS_DB_URL"), "nohelp", nil)
 	var cfRequest ReserveRequest
@@ -85,7 +95,7 @@ func CfInsert(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Printf("req: %+v\n", cfRequest)
 
-	_, err = client.CfAdd(cfRequest.KeyName, cfRequest.Item)
+	res, err := client.CfAdd(cfRequest.KeyName, cfRequest.Item)
 	if err != nil {
 		if strings.Contains(err.Error(), "not found") {
 			w.WriteHeader(http.StatusNotFound)
@@ -96,16 +106,69 @@ func CfInsert(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("err: " + err.Error()))
 		return
 	}
+	if !res {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("item did not get added. It could already exist. Check /cf-exists"))
+		return
+	}
 
-	// for _, r := range res {
-	// 	fmt.Println("res: ", r)
-	// 	if r == 0 {
-	// 		w.WriteHeader(http.StatusConflict)
-	// 		w.Write([]byte("item may already exist"))
-	// 		return
-	// 	}
-	// }
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("added"))
 
+}
+
+func CfExists(w http.ResponseWriter, r *http.Request) {
+	var client = redisbloom.NewClient(os.Getenv("REDIS_DB_URL"), "nohelp", nil)
+	var cfRequest ExistsRequest
+
+	err := json.NewDecoder(r.Body).Decode(&cfRequest)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	fmt.Printf("req: %+v\n", cfRequest)
+	res, err := client.CfExists(cfRequest.KeyName, cfRequest.Item)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	if res {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("maybe exists"))
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("definitely does not exist"))
+}
+
+func CfDeleteItem(w http.ResponseWriter, r *http.Request) {
+	var client = redisbloom.NewClient(os.Getenv("REDIS_DB_URL"), "nohelp", nil)
+	var cfRequest DelItemRequest
+
+	err := json.NewDecoder(r.Body).Decode(&cfRequest)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	fmt.Printf("req: %+v\n", cfRequest)
+	res, err := client.CfDel(cfRequest.KeyName, cfRequest.Item)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	if !res {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("item not found"))
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Deleted item"))
 }

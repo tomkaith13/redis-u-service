@@ -32,6 +32,8 @@ func main() {
 
 	r.Post("/cf-reserve", cf.CfReserve)
 	r.Post("/cf-insert", cf.CfInsert)
+	r.Get("/cf-exists", cf.CfExists)
+	r.Delete("/cf-delete", cf.CfDeleteItem)
 
 	log.Fatal(http.ListenAndServe(":8080", r))
 
