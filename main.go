@@ -19,15 +19,10 @@ func main() {
 	r.Use(middleware.Recoverer)
 
 	r.Post("/bfadd-test", bf.BfAddTestFunc)
-
 	r.Post("/bf-test-setup", bf.BfTestSetup)
-
 	r.Post("/bf-reserve", bf.BfReserve)
-
 	r.Post("/bf-insert", bf.BfInsert)
-
 	r.Delete("/bf", bf.BfDelete)
-
 	r.Get("/bf-exists", bf.BfExists)
 
 	r.Post("/cf-reserve", cf.CfReserve)
